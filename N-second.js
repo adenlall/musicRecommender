@@ -1,32 +1,73 @@
 //////////////////////////////////////|
+
+
+function navDev(){
+  document.getElementById("mmenu").style = `display:flex;`;
+  document.getElementById("alla").style = `overflow-y: hidden;`;
+
+}
+function eaxtDev(){
+
+  document.getElementById("mmenu").style = `display:none;`;
+  document.getElementById("alla").style = `overflow-y: auto;`;
+
+}
+
+function navAbout(){
+  document.getElementById("mmenu").style = `display:flex;`;
+  document.getElementById("alla").style = `overflow-y: hidden;`;
+
+}
+function eaxtAbout(){
+
+  document.getElementById("mmenu").style = `display:none;`;
+  document.getElementById("alla").style = `overflow-y: auto;`;
+
+}
+
+function nav(){
+  document.getElementById("mmenu").style = `display:flex;`;
+  document.getElementById("alla").style = `overflow-y: hidden;`;
+
+};
+
+function eaxt(){
+
+  document.getElementById("mmenu").style = `display:none;`;
+  document.getElementById("alla").style = `overflow-y: auto;`;
+
+
+}
+
+
 //////////////////////////////////////|
 //////////////////////////////////////|
-const apiip = `http://api.ipstack.com/check?access_key=34efa93ccb4ef3a0f27abc2777b276da`;
+const apiip = `https://api.ipregistry.co/?key=yhenjpzwtjz5pi2h`;
 async function getIp(){
     const ipcity = await fetch(apiip);
     const idip = await ipcity.json();
-    console.log(idip);
+    var imojj = idip.location.country_flag_emoji;
+    document.getElementById('fflag').src = idip.location.country.flag.noto;
+  
+
     
-    var ciity = idip.city
-    var coountry = idip.country_name
-    console.log(ciity)
-    console.log(coountry) 
-    const apiWeather = `https://api.openweathermap.org/data/2.5/weather?q=${ciity},${coountry}&units=metric&appid=640dd62032cdb0fa31d41c05f34c215a`;
+    var lon = idip.location.longitude;
+    var lat = idip.location.latitude;
+
+
+    const apiWeather = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=640dd62032cdb0fa31d41c05f34c215a`;
     async function getWeather(){
         const reweather = await fetch(apiWeather);
         const uniit = await reweather.json();
-        console.log(uniit)
     
     }getWeather()
     
 
-var genrre = "chill"
-const apiChart = `http://api.deezer.com/chart`;
+const apiChart = `https://api.deezer.com/chart`;
 async function getChart(){
     const reesponse = await fetch(apiChart);
     const daata = await reesponse.json();
-    console.log(daata)
-    
+
     document.getElementById('art1').src = daata.albums.data[0].cover_big;
     document.getElementById('art2').src = daata.albums.data[1].cover_big;
     document.getElementById('art3').src = daata.albums.data[2].cover_big;
@@ -37,9 +78,9 @@ async function getChart(){
     document.getElementById('art8').src = daata.albums.data[7].cover_big;
     document.getElementById('art9').src = daata.albums.data[8].cover_big;
 
-    document.getElementById('artp1').innerHTML = '1. ' + daata.albums.data[0].artist.name;
-    document.getElementById('artp2').innerHTML = '2. ' + daata.albums.data[1].artist.name;
-    document.getElementById('artp3').innerHTML = '3. ' + daata.albums.data[2].artist.name;
+    document.getElementById('artp1').innerHTML = '🥇 ' + daata.albums.data[0].artist.name;
+    document.getElementById('artp2').innerHTML = '🥈 ' + daata.albums.data[1].artist.name;
+    document.getElementById('artp3').innerHTML = '🥉 ' + daata.albums.data[2].artist.name;
     document.getElementById('artp4').innerHTML = '4. ' + daata.albums.data[3].artist.name;
     document.getElementById('artp5').innerHTML = '5. ' + daata.albums.data[4].artist.name;
     document.getElementById('artp6').innerHTML = '6. ' + daata.albums.data[5].artist.name;
@@ -54,447 +95,372 @@ getIp()
 //////////////////////////////////////|
 //////////////////////////////////////|
 //////////////////////////////////////|
-function onecho(){
-    console.log("t1 clicked")
-    document.getElementById("twogenre").innerHTML = `<input
-    label="Rock"
-    type="radio"
-    id="t1"
-    name="genres"
-    value="dark"
-  />
-  <input label="electronic" type="radio" id="t8" name="genres" value="calm" />
-  <input
-    label="Metal"
-    type="radio"
-    id="t2"
-    name="genres"
-    value="chill"
-  />
-  <input
-    label="Aambient"
-    type="radio"
-    id="t3"
-    name="genres"
-    value="sad"
-  />
-  <input
-    label="Pop"
-    type="radio"
-    id="t4"
-    name="genres"
-    value="gung"
-  />
-  <input
-    label="Music"
-    type="radio"
-    id="t5"
-    name="genres"
-    value="peace"
-  />
-  <input
-    label="Rap"
-    type="radio"
-    id="t6"
-    name="genres"
-    value="stars"
-  />
-  <input
-    label="folk"
-    type="radio"
-    id="t7"
-    name="genres"
-    value="space"
-  />`
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function myDark(){
+
+
+  //the dispaly name of radio
+  var span1 = 'Rock';
+  var span2 = 'Electronic';
+  var span3 = 'Metal';
+  var span4 = 'Ambient';
+  var span5 = 'Noise';
+  var span6 = 'Music';
+  var span7 = 'Rap';
+  var span8 = 'Folk';
+
+  //the value of input
+  var val1 = 'dark+rock';
+  var val2 = 'dark+electronic'; 
+  var val3 = 'dark+metal'; 
+  var val4 = 'dark+ambient'; 
+  var val5 = 'dark+noise'; 
+  var val6 = 'dark+music'; 
+  var val7 = 'dark+rap'; 
+  var val8 = 'dark+folk';
+
+
+//apply the function on related div
+
+ document.getElementById("inp1").innerHTML = `<input name="genre" type="radio" value="${val1}"><span>${span1}</span>`;
+
+ document.getElementById("inp2").innerHTML = `<input name="genre" type="radio" value="${val2}"><span>${span2}</span>`;
+
+ document.getElementById("inp3").innerHTML = `<input name="genre" type="radio" value="${val3}"><span>${span3}</span>`;
+
+ document.getElementById("inp4").innerHTML = `<input name="genre" type="radio" value="${val4}"><span>${span4}</span>`;
+
+ document.getElementById("inp5").innerHTML = `<input name="genre" type="radio" value="${val5}"><span>${span5}</span>`;
+
+ document.getElementById("inp6").innerHTML = `<input name="genre" type="radio" value="${val6}"><span>${span6}</span>`;
+
+ document.getElementById("inp7").innerHTML = `<input name="genre" type="radio" value="${val7}"><span>${span7}</span>`;
+
+ document.getElementById("inp8").innerHTML = `<input name="genre" type="radio" value="${val8}"><span>${span8}</span>`;
+ 
 }
-function foocho(){
-    console.log("t4 clicked")
-    document.getElementById("twogenre").innerHTML = `<input
-    label="Trap"
-    type="radio"
-    id="t1"
-    name="genres"
-    value="dark"
-  />
-  <input label="electronic" type="radio" id="t8" name="genres" value="calm" />
-  <input
-    label="Rap"
-    type="radio"
-    id="t2"
-    name="genres"
-    value="chill"
-  />
-  <input
-    label="Pop"
-    type="radio"
-    id="t3"
-    name="genres"
-    value="sad"
-  />
-  <input
-    label="rock"
-    type="radio"
-    id="t4"
-    name="genres"
-    value="gung"
-  />
-  <input
-    label="Music"
-    type="radio"
-    id="t5"
-    name="genres"
-    value="peace"
-  />
-  <input
-    label="folk"
-    type="radio"
-    id="t6"
-    name="genres"
-    value="stars"
-  />
-  <input
-    label="piano"
-    type="radio"
-    id="t7"
-    name="genres"
-    value="space"
-  />`
+function myClassic(){
 
-}
-function fivcho(){
-    console.log("t5 clicked")
-    document.getElementById("twogenre").innerHTML = `<input
-    label="Rap"
-    type="radio"
-    id="t1"
-    name="genres"
-    value="dark"
-  />
-  <input label="electronic" type="radio" id="t8" name="genres" value="calm" />
-  <input
-    label="Trap"
-    type="radio"
-    id="t2"
-    name="genres"
-    value="chill"
-  />
-  <input
-    label="Autotune"
-    type="radio"
-    id="t3"
-    name="genres"
-    value="sad"
-  />
-  <input
-    label="hip-hop"
-    type="radio"
-    id="t4"
-    name="genres"
-    value="gung"
-  />
-  <input
-    label="sky"
-    type="radio"
-    id="t5"
-    name="genres"
-    value="peace"
-  />
-  <input
-    label="smoke"
-    type="radio"
-    id="t6"
-    name="genres"
-    value="stars"
-  />
-  <input
-    label="gangsta"
-    type="radio"
-    id="t7"
-    name="genres"
-    value="space"
-    disabled = true
-  />`
+  //the dispaly name of radio
+  var span1 = 'Beethoven';
+  var span2 = 'Piano';
+  var span3 = 'Opera';
+  var span4 = 'Baroque';
+  var span5 = 'Bach';
+  var span6 = 'Violin';
+  var span7 = 'Jazz';
+  var span8 = 'Swing';
 
+  //the value of input
+  var val1 = 'Beethoven';
+  var val2 = 'Piano'; 
+  var val3 = 'Opera'; 
+  var val4 = 'Baroque'; 
+  var val5 = 'Bach'; 
+  var val6 = 'Violin'; 
+  var val7 = 'Jazz'; 
+  var val8 = 'Swing';
+
+
+//apply the function on related div
+
+ document.getElementById("inp1").innerHTML = `<input name="genre" type="radio" value="${val1}"><span>${span1}</span>`;
+
+ document.getElementById("inp2").innerHTML = `<input name="genre" type="radio" value="${val2}"><span>${span2}</span>`;
+
+ document.getElementById("inp3").innerHTML = `<input name="genre" type="radio" value="${val3}"><span>${span3}</span>`;
+
+ document.getElementById("inp4").innerHTML = `<input name="genre" type="radio" value="${val4}"><span>${span4}</span>`;
+
+ document.getElementById("inp5").innerHTML = `<input name="genre" type="radio" value="${val5}"><span>${span5}</span>`;
+
+ document.getElementById("inp6").innerHTML = `<input name="genre" type="radio" value="${val6}"><span>${span6}</span>`;
+
+ document.getElementById("inp7").innerHTML = `<input name="genre" type="radio" value="${val7}"><span>${span7}</span>`;
+
+ document.getElementById("inp8").innerHTML = `<input name="genre" type="radio" value="${val8}"><span>${span8}</span>`;
+ 
 }
 
-function thrcho(){
-    console.log("t5 clicked")
-    document.getElementById("twogenre").innerHTML = `<input
-    label="Rap"
-    type="radio"
-    id="t1"
-    name="genres"
-    value="dark"
-  />
-  <input label="electronic" type="radio" id="t8" name="genres" value="calm" />
-  <input
-    label="Lofi"
-    type="radio"
-    id="t2"
-    name="genres"
-    value="chill"
-  />
-  <input
-    label="Hip-Hop"
-    type="radio"
-    id="t3"
-    name="genres"
-    value="sad"
-  />
-  <input
-    label="Pop"
-    type="radio"
-    id="t4"
-    name="genres"
-    value="gung"
-  />
-  <input
-    label="Chillout"
-    type="radio"
-    id="t5"
-    name="genres"
-    value="peace"
-  />
-  <input
-    label="night"
-    type="radio"
-    id="t6"
-    name="genres"
-    value="stars"
-  />
-  <input
-    label="ballad"
-    type="radio"
-    id="t7"
-    name="genres"
-    value="space"
-  />`
+function myChill(){
 
+  //the dispaly name of radio
+  var span1 = 'Rap';
+  var span2 = 'Lofi';
+  var span3 = 'Hip-Hop';
+  var span4 = 'Pop';
+  var span5 = 'Chillout';
+  var span6 = 'Night';
+  var span7 = 'Ballad';
+  var span8 = 'calm';
+
+  //the value of input
+  var val1 = 'chill+rap';
+  var val2 = 'lofi'; 
+  var val3 = 'chill+Hip-Hop'; 
+  var val4 = 'chill+pop'; 
+  var val5 = 'Chillout'; 
+  var val6 = 'Night'; 
+  var val7 = 'Ballad'; 
+  var val8 = 'calm';
+
+
+//apply the function on related div
+
+ document.getElementById("inp1").innerHTML = `<input name="genre" type="radio" value="${val1}"><span>${span1}</span>`;
+
+ document.getElementById("inp2").innerHTML = `<input name="genre" type="radio" value="${val2}"><span>${span2}</span>`;
+
+ document.getElementById("inp3").innerHTML = `<input name="genre" type="radio" value="${val3}"><span>${span3}</span>`;
+
+ document.getElementById("inp4").innerHTML = `<input name="genre" type="radio" value="${val4}"><span>${span4}</span>`;
+
+ document.getElementById("inp5").innerHTML = `<input name="genre" type="radio" value="${val5}"><span>${span5}</span>`;
+
+ document.getElementById("inp6").innerHTML = `<input name="genre" type="radio" value="${val6}"><span>${span6}</span>`;
+
+ document.getElementById("inp7").innerHTML = `<input name="genre" type="radio" value="${val7}"><span>${span7}</span>`;
+
+ document.getElementById("inp8").innerHTML = `<input name="genre" type="radio" value="${val8}"><span>${span8}</span>`;
+ 
 }
 
-function sixcho(){
-    console.log("t6 clicked")
-    document.getElementById("twogenre").innerHTML = `<input
-    label="trap"
-    type="radio"
-    id="t1"
-    name="genres"
-    value="french+trap"
-  />
-  <input label="chanson" type="radio" id="t8" name="genres" value="calm" />
-  <input
-    label="rap"
-    type="radio"
-    id="t2"
-    name="genres"
-    value="rap+francais"
-  />
-  <input
-    label="Hip-Hop"
-    type="radio"
-    id="t3"
-    name="genres"
-    value="sad"
-  />
-  <input
-    label="Pop"
-    type="radio"
-    id="t4"
-    name="genres"
-    value="gung"
-  />
-  <input
-    label="spleen"
-    type="radio"
-    id="t5"
-    name="genres"
-    value="peace"
-  />
-  <input
-    label="Rap"
-    type="radio"
-    id="t6"
-    name="genres"
-    value="stars"
-  />
-  <input
-    label="algeria"
-    type="radio"
-    id="t7"
-    name="genres"
-    value="space"
-  />`
+function mySad(){
 
+  //the dispaly name of radio
+  var span1 = 'Trap';
+  var span2 = 'Rap';
+  var span3 = 'Pop';
+  var span4 = 'Piano';
+  var span5 = 'Music';
+  var span6 = 'Mood';
+  var span7 = 'alternative';
+  var span8 = 'So sad';
+
+  //the value of input
+  var val1 = 'sad+trap';
+  var val2 = 'sad+rap'; 
+  var val3 = 'sad+pop'; 
+  var val4 = 'sad+piano'; 
+  var val5 = 'sad+music'; 
+  var val6 = 'sad'; 
+  var val7 = 'Alternative'; 
+  var val8 = 'sad';
+
+
+//apply the function on related div
+
+ document.getElementById("inp1").innerHTML = `<input name="genre" type="radio" value="${val1}"><span>${span1}</span>`;
+
+ document.getElementById("inp2").innerHTML = `<input name="genre" type="radio" value="${val2}"><span>${span2}</span>`;
+
+ document.getElementById("inp3").innerHTML = `<input name="genre" type="radio" value="${val3}"><span>${span3}</span>`;
+
+ document.getElementById("inp4").innerHTML = `<input name="genre" type="radio" value="${val4}"><span>${span4}</span>`;
+
+ document.getElementById("inp5").innerHTML = `<input name="genre" type="radio" value="${val5}"><span>${span5}</span>`;
+
+ document.getElementById("inp6").innerHTML = `<input name="genre" type="radio" value="${val6}"><span>${span6}</span>`;
+
+ document.getElementById("inp7").innerHTML = `<input name="genre" type="radio" value="${val7}"><span>${span7}</span>`;
+
+ document.getElementById("inp8").innerHTML = `<input name="genre" type="radio" value="${val8}"><span>${span8}</span>`;
+ 
 }
-function eigcho(){
-    console.log("t6 clicked")
-    document.getElementById("twogenre").innerHTML = `<input
-    label="anime"
-    type="radio"
-    id="t1"
-    name="genres"
-    value="french+trap"
-  />
-  <input label="chanson" type="radio" id="t8" name="genres" value="calm" />
-  <input
-    label="japanese"
-    type="radio"
-    id="t2"
-    name="genres"
-    value="rap+francais"
-  />
-  <input
-    label="Hip-Hop"
-    type="radio"
-    id="t3"
-    name="genres"
-    value="J-hiphop"
-  />
-  <input
-    label="j-rock"
-    type="radio"
-    id="t4"
-    name="genres"
-    value="gung"
-  />
-  <input
-    label="Asian"
-    type="radio"
-    id="t5"
-    name="genres"
-    value="peace"
-  />
-  <input
-    label="Pop"
-    type="radio"
-    id="t6"
-    name="genres"
-    value="stars"
-  />
-  <input
-    label="Shibuya-kei"
-    type="radio"
-    id="t7"
-    name="genres"
-    value="space"
-  />`
 
-}
-function sevcho(){
-    console.log("t6 clicked")
-    document.getElementById("twogenre").innerHTML = `<input
-    label="egyptian"
-    type="radio"
-    id="t1"
-    name="genres"
-    value="french+trap"
-  />
-  <input label="lebanese" type="radio" id="t8" name="genres" value="calm" />
-  <input
-    label="moroccan"
-    type="radio"
-    id="t2"
-    name="genres"
-    value="moroccan+rap"
-  />
-  <input
-    label="maghrebp"
-    type="radio"
-    id="t3"
-    name="genres"
-    value="J-hiphop"
-  />
-  <input
-    label="rai"
-    type="radio"
-    id="t4"
-    name="genres"
-    value="gung"
-  />
-  <input
-    label="Pop"
-    type="radio"
-    id="t5"
-    name="genres"
-    value="arabic+pop"
-  />
-  <input
-    label="khaleeji"
-    type="radio"
-    id="t6"
-    name="genres"
-    value="khaleeji"
-  />
-  <input
-    label="nasheed"
-    type="radio"
-    id="t7"
-    name="genres"
-    value="nasheed"
-  />`
+function myCLoud(){
 
-}
-function twocho(){
-    console.log("t6 clicked")
-    document.getElementById("twogenre").innerHTML = `<input
-    label="Beethoven"
-    type="radio"
-    id="t1"
-    name="genres"
-    value="french+trap"
-  />
-  <input label="piano" type="radio" id="t8" name="genres" value="calm" />
-  <input
-    label="opera"
-    type="radio"
-    id="t2"
-    name="genres"
-    value="moroccan+rap"
-  />
-  <input
-    label="Baroque"
-    type="radio"
-    id="t3"
-    name="genres"
-    value="J-hiphop"
-  />
-  <input
-    label="Bach"
-    type="radio"
-    id="t4"
-    name="genres"
-    value="gung"
-  />
-  <input
-    label="Violin"
-    type="radio"
-    id="t5"
-    name="genres"
-    value="arabic+pop"
-  />
-  <input
-    label="jazz"
-    type="radio"
-    id="t6"
-    name="genres"
-    value="khaleeji"
-  />
-  <input
-    label="Swing"
-    type="radio"
-    id="t7"
-    name="genres"
-    value="nasheed"
-  />`
+  //the dispaly name of radio
+  var span1 = 'Rap';
+  var span2 = 'Trap';
+  var span3 = 'Autotune';
+  var span4 = 'Hip-hop';
+  var span5 = 'Deep';
+  var span6 = 'Smoke';
+  var span7 = 'Jazz';
+  var span8 = 'Sesh';
 
+  //the value of input
+  var val1 = 'cloud+rap';
+  var val2 = 'cloud+trap'; 
+  var val3 = 'Autotune'; 
+  var val4 = 'cloud+Hip-hop'; 
+  var val5 = 'Deep'; 
+  var val6 = 'smoking'; 
+  var val7 = 'Gangsta'; 
+  var val8 = 'Sesh';
+
+
+//apply the function on related div
+
+ document.getElementById("inp1").innerHTML = `<input name="genre" type="radio" value="${val1}"><span>${span1}</span>`;
+
+ document.getElementById("inp2").innerHTML = `<input name="genre" type="radio" value="${val2}"><span>${span2}</span>`;
+
+ document.getElementById("inp3").innerHTML = `<input name="genre" type="radio" value="${val3}"><span>${span3}</span>`;
+
+ document.getElementById("inp4").innerHTML = `<input name="genre" type="radio" value="${val4}"><span>${span4}</span>`;
+
+ document.getElementById("inp5").innerHTML = `<input name="genre" type="radio" value="${val5}"><span>${span5}</span>`;
+
+ document.getElementById("inp6").innerHTML = `<input name="genre" type="radio" value="${val6}"><span>${span6}</span>`;
+
+ document.getElementById("inp7").innerHTML = `<input name="genre" type="radio" value="${val7}"><span>${span7}</span>`;
+
+ document.getElementById("inp8").innerHTML = `<input name="genre" type="radio" value="${val8}"><span>${span8}</span>`;
+ 
 }
 
 
+function myFrench(){
+
+  //the dispaly name of radio
+  var span1 = 'Trap';
+  var span2 = 'Hip-Hop';
+  var span3 = 'Rap';
+  var span4 = 'Pop';
+  var span5 = 'Chanson';
+  var span6 = 'Marseille';
+  var span7 = 'Jazz';
+  var span8 = 'Paris';
+
+  //the value of input
+  var val1 = 'french+trap';
+  var val2 = 'french+hip-hop'; 
+  var val3 = 'french+rap'; 
+  var val4 = 'french+pop'; 
+  var val5 = 'Chanson'; 
+  var val6 = 'Marseille'; 
+  var val7 = 'french+jazz'; 
+  var val8 = 'Paris';
 
 
-/*
-//play audio with out html audio tag
-var myAudio = new Audio('https://cdns-preview-b.dzcdn.net/stream/c-bdaa6502a127ad8312acaeb89def7206-0.mp3');
-myAudio.play();
-*/
+//apply the function on related div
+
+ document.getElementById("inp1").innerHTML = `<input name="genre" type="radio" value="${val1}"><span>${span1}</span>`;
+
+ document.getElementById("inp2").innerHTML = `<input name="genre" type="radio" value="${val2}"><span>${span2}</span>`;
+
+ document.getElementById("inp3").innerHTML = `<input name="genre" type="radio" value="${val3}"><span>${span3}</span>`;
+
+ document.getElementById("inp4").innerHTML = `<input name="genre" type="radio" value="${val4}"><span>${span4}</span>`;
+
+ document.getElementById("inp5").innerHTML = `<input name="genre" type="radio" value="${val5}"><span>${span5}</span>`;
+
+ document.getElementById("inp6").innerHTML = `<input name="genre" type="radio" value="${val6}"><span>${span6}</span>`;
+
+ document.getElementById("inp7").innerHTML = `<input name="genre" type="radio" value="${val7}"><span>${span7}</span>`;
+
+ document.getElementById("inp8").innerHTML = `<input name="genre" type="radio" value="${val8}"><span>${span8}</span>`;
+ 
+}
+
+function myArabic(){
+
+  //the dispaly name of radio
+  var span1 = 'Egyptian';
+  var span2 = 'lebanese';
+  var span3 = 'Moroccan';
+  var span4 = 'Maghreb';
+  var span5 = 'Rai';
+  var span6 = 'Pop';
+  var span7 = 'Khaleeji';
+  var span8 = 'Nasheed';
+
+  //the value of input
+  var val1 = 'Egyptian';
+  var val2 = 'lebanese'; 
+  var val3 = 'Moroccan'; 
+  var val4 = 'Maghreb'; 
+  var val5 = 'Rai'; 
+  var val6 = 'Pop'; 
+  var val7 = 'Khaleeji'; 
+  var val8 = 'Nasheed';
+
+
+//apply the function on related div
+
+ document.getElementById("inp1").innerHTML = `<input name="genre" type="radio" value="${val1}"><span>${span1}</span>`;
+
+ document.getElementById("inp2").innerHTML = `<input name="genre" type="radio" value="${val2}"><span>${span2}</span>`;
+
+ document.getElementById("inp3").innerHTML = `<input name="genre" type="radio" value="${val3}"><span>${span3}</span>`;
+
+ document.getElementById("inp4").innerHTML = `<input name="genre" type="radio" value="${val4}"><span>${span4}</span>`;
+
+ document.getElementById("inp5").innerHTML = `<input name="genre" type="radio" value="${val5}"><span>${span5}</span>`;
+
+ document.getElementById("inp6").innerHTML = `<input name="genre" type="radio" value="${val6}"><span>${span6}</span>`;
+
+ document.getElementById("inp7").innerHTML = `<input name="genre" type="radio" value="${val7}"><span>${span7}</span>`;
+
+ document.getElementById("inp8").innerHTML = `<input name="genre" type="radio" value="${val8}"><span>${span8}</span>`;
+ 
+}
+
+function myJapan(){
+
+  //the dispaly name of radio
+  var span1 = 'Anime';
+  var span2 = 'Japanese';
+  var span3 = 'Hip-Hop';
+  var span4 = 'J-rock';
+  var span5 = 'Asian';
+  var span6 = 'Pop';
+  var span7 = 'Jazz';
+  var span8 = 'Shibuya-kei';
+
+  //the value of input
+  var val1 = 'Anime';
+  var val2 = 'Japanese'; 
+  var val3 = 'j-hiphop'; 
+  var val4 = 'J-rock'; 
+  var val5 = 'Asian'; 
+  var val6 = 'asian+pop'; 
+  var val7 = 'Jazz'; 
+  var val8 = 'Shibuya-kei';
+
+
+//apply the function on related div
+
+ document.getElementById("inp1").innerHTML = `<input name="genre" type="radio" value="${val1}"><span>${span1}</span>`;
+
+ document.getElementById("inp2").innerHTML = `<input name="genre" type="radio" value="${val2}"><span>${span2}</span>`;
+
+ document.getElementById("inp3").innerHTML = `<input name="genre" type="radio" value="${val3}"><span>${span3}</span>`;
+
+ document.getElementById("inp4").innerHTML = `<input name="genre" type="radio" value="${val4}"><span>${span4}</span>`;
+
+ document.getElementById("inp5").innerHTML = `<input name="genre" type="radio" value="${val5}"><span>${span5}</span>`;
+
+ document.getElementById("inp6").innerHTML = `<input name="genre" type="radio" value="${val6}"><span>${span6}</span>`;
+
+ document.getElementById("inp7").innerHTML = `<input name="genre" type="radio" value="${val7}"><span>${span7}</span>`;
+
+ document.getElementById("inp8").innerHTML = `<input name="genre" type="radio" value="${val8}"><span>${span8}</span>`;
+ 
+}
+
+
