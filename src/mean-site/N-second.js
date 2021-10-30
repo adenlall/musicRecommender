@@ -51,49 +51,62 @@ async function getIp() {
   var imojj = idip.location.country_flag_emoji;
   document.getElementById('fflag').src = idip.location.country.flag.noto;
 
+  var countyName = idip.location.country.name;
+
+  const clientId = '3b7adf8af5b64346a05e69bf5b4551de';
+  const clientSecret = '8ecaf8d7e30a4b549cfc603012bffe90';
+  
+  //get token
+  const rreesponse = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+          'Content-Type' : 'application/x-www-form-urlencoded', 
+          'Authorization' : 'Basic ' + btoa(clientId + ':' + clientSecret)
+      },
+      body: 'grant_type=client_credentials'
+  });;
+  const dattaa = await rreesponse.json();
+  var token = dattaa.access_token;
 
 
-  var lon = idip.location.longitude;
-  var lat = idip.location.latitude;
+  const chart = await fetch(`https://api.spotify.com/v1/search?query=top%2050%20${countyName}&type=playlist&market=us&limit=50&offset=0`, {
+          method: 'GET',
+          headers: { 'Authorization' : 'Bearer ' + token}
+      });
+      const searchChart = await chart.json();
+      var playlistId = searchChart.playlists.items[0].id;
 
 
-  const apiWeather = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=640dd62032cdb0fa31d41c05f34c215a`;
-  async function getWeather() {
-    const reweather = await fetch(apiWeather);
-    const uniit = await reweather.json();
+      const playlistInfoAPI = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+          method: 'GET',
+          headers: { 'Authorization' : 'Bearer ' + token}
+      });
 
-  }
-  getWeather()
+      const playlistInfo = await playlistInfoAPI.json();
 
+      document.getElementById(`art1`).src = playlistInfo.tracks.items[0].track.album.images[2].url;
+      document.getElementById(`art2`).src = playlistInfo.tracks.items[1].track.album.images[2].url;
+      document.getElementById(`art3`).src = playlistInfo.tracks.items[2].track.album.images[2].url;
+      document.getElementById(`art4`).src = playlistInfo.tracks.items[3].track.album.images[2].url;
+      document.getElementById(`art5`).src = playlistInfo.tracks.items[4].track.album.images[2].url;
+      document.getElementById(`art6`).src = playlistInfo.tracks.items[5].track.album.images[2].url;
+      document.getElementById(`art7`).src = playlistInfo.tracks.items[6].track.album.images[2].url;
+      document.getElementById(`art8`).src = playlistInfo.tracks.items[7].track.album.images[2].url;
+      document.getElementById(`art9`).src = playlistInfo.tracks.items[8].track.album.images[2].url;
 
-  const apiChart = `https://api.deezer.com/chart`;
-  async function getChart() {
-    const reesponse = await fetch(apiChart);
-    const daata = await reesponse.json();
-
-    document.getElementById('art1').src = daata.albums.data[0].cover_big;
-    document.getElementById('art2').src = daata.albums.data[1].cover_big;
-    document.getElementById('art3').src = daata.albums.data[2].cover_big;
-    document.getElementById('art4').src = daata.albums.data[3].cover_big;
-    document.getElementById('art5').src = daata.albums.data[4].cover_big;
-    document.getElementById('art6').src = daata.albums.data[5].cover_big;
-    document.getElementById('art7').src = daata.albums.data[6].cover_big;
-    document.getElementById('art8').src = daata.albums.data[7].cover_big;
-    document.getElementById('art9').src = daata.albums.data[8].cover_big;
-
-    document.getElementById('artp1').innerHTML = '🥇 ' + daata.albums.data[0].artist.name;
-    document.getElementById('artp2').innerHTML = '🥈 ' + daata.albums.data[1].artist.name;
-    document.getElementById('artp3').innerHTML = '🥉 ' + daata.albums.data[2].artist.name;
-    document.getElementById('artp4').innerHTML = '4. ' + daata.albums.data[3].artist.name;
-    document.getElementById('artp5').innerHTML = '5. ' + daata.albums.data[4].artist.name;
-    document.getElementById('artp6').innerHTML = '6. ' + daata.albums.data[5].artist.name;
-    document.getElementById('artp7').innerHTML = '7. ' + daata.albums.data[6].artist.name;
-    document.getElementById('artp8').innerHTML = '8. ' + daata.albums.data[7].artist.name;
-    document.getElementById('artp9').innerHTML = '9. ' + daata.albums.data[8].artist.name;
+    
+      document.getElementById('artp1').innerHTML = '🥇 ' + playlistInfo.tracks.items[0].track.name;
+      document.getElementById('artp2').innerHTML = '🥈 ' +playlistInfo.tracks.items[1].track.name;
+      document.getElementById('artp3').innerHTML = '🥉 ' +playlistInfo.tracks.items[2].track.name;
+      for(i=3; i<10; i++){
+      document.getElementById(`artp${i+1}`).innerHTML = `${i+1}. ` +playlistInfo.tracks.items[i].track.name;
+      }
+  
 
 
-  }
-  getChart()
+
+
+
 }
 getIp()
 //////////////////////////////////////|

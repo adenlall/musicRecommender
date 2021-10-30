@@ -61,7 +61,6 @@ function myMood() {
 
 
 
-
         const responset = await fetch(`https://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=4425e763ff6cd49e5f0f14ed57c94ee5&artist=${artistName}&album=${albumName}&format=json&btnI=Im+Feeling+Lucky`);
         const info = await responset.json();
 
@@ -150,30 +149,64 @@ function myMood() {
         document.getElementById("conn").style.backgroundImage = `url(${bbak})`;
 
 
-        const apiAlbum = `https://api.deezer.com/search/album?q=${albumName}%20${artistName}`;
-        const rreesponse = await fetch(apiAlbum);
+
+        const clientId = '3b7adf8af5b64346a05e69bf5b4551de';
+        const clientSecret = '8ecaf8d7e30a4b549cfc603012bffe90';
+        
+        //get token
+        const rreesponse = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/x-www-form-urlencoded', 
+                'Authorization' : 'Basic ' + btoa(clientId + ':' + clientSecret)
+            },
+            body: 'grant_type=client_credentials'
+        });;
         const dattaa = await rreesponse.json();
-
-        var albumId = dattaa.data[0].id
-        if (albumId == null) {}
-
-        const apiTrack = `https://api.deezer.com/album/${albumId}`;
-        const rreessponse = await fetch(apiTrack);
-        const daattaa = await rreessponse.json();
+        var token = dattaa.access_token;
 
 
-        var trackdata = daattaa.tracks.data
-        var tracklen = trackdata.length
+        //link last.fm api with spotify api by search method
+        const searcAPI = await fetch(`https://api.spotify.com/v1/search?query=${albumName}` + '%20' + `${artistName}&type=album&market=us&limit=50&offset=0`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+            const searchByName = await searcAPI.json();
 
+
+            var albumId = searchByName.albums.items[0].id; //get albumId for full information
+            //end search
+
+
+
+            const albumInfoAPI = await fetch(`https://api.spotify.com/v1/albums/${albumId}`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+
+            const albumFull = await albumInfoAPI.json();
+
+            var artistId = albumFull.artists[0].id;  //get artist id for related artists
+
+
+        var tracklen = albumFull.tracks.items.length;
+
+        
         function getRandomtrack(max) {
             return Math.floor(Math.random() * max);
         }
+
         var tracklenght = getRandomtrack(tracklen);
-        let trackId = daattaa.tracks.data[`${tracklenght}`].preview
-        var trackName = daattaa.tracks.data[`${tracklenght}`].title
+
+        let trackId = albumFull.tracks.items[`${tracklenght}`].preview_url;
+
+        var trackName = albumFull.tracks.items[`${tracklenght}`].name
+
         document.getElementById('trackName').innerHTML = trackName
-        document.getElementById("myAudio").src = `${trackId}`
+        document.getElementById("myAudio").src = trackId;
     }
+
+    
     getData();
 
     $(document).ready(function () {
@@ -216,6 +249,10 @@ function togglePlay() {
     var nonopp = "no-preview";
     var nopp = document.getElementById('trackName').textContent;
 
+    var auddsrc = document.getElementById('myAudio').src;
+
+
+
     if (nopp === nonopp) {
 
         var closeLload = document.getElementById('lload');
@@ -226,10 +263,13 @@ function togglePlay() {
             document.getElementById('lloadingTry').innerHTML = ' ';
         };
         document.getElementById('lload').style = 'display: flex;';
-        document.getElementById('lloading').innerHTML = 'there no preview for this track';
+        document.getElementById('lloading').innerHTML = 'there no data tracks for this album.';
         document.getElementById('lloadingTry').innerHTML = ''
 
-    } else {
+    }if(auddsrc == 'http://127.0.0.1:5500/null'){
+
+    }
+     else {
         myAudio.play();
 
     }
@@ -366,7 +406,84 @@ function clearMood() {
 
 }
 
+function rrest() {
+    myAudio.pause();
 
+    let albumRe = document.getElementById('albname').textContent
+    let artistRe = document.getElementById('artistName').textContent
+
+
+
+
+    
+
+
+    async function getother() {
+
+
+        const clientId = '3b7adf8af5b64346a05e69bf5b4551de';
+        const clientSecret = '8ecaf8d7e30a4b549cfc603012bffe90';
+        
+        //get token
+        const rreesponse = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/x-www-form-urlencoded', 
+                'Authorization' : 'Basic ' + btoa(clientId + ':' + clientSecret)
+            },
+            body: 'grant_type=client_credentials'
+        });;
+        const dattaa = await rreesponse.json();
+        var token = dattaa.access_token;
+
+
+
+        const searcAPI = await fetch(`https://api.spotify.com/v1/search?query=${albumRe}` + '%20' + `${artistRe}&type=album&market=us&limit=50&offset=0`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+            const searchByName = await searcAPI.json();
+
+
+            var albumId = searchByName.albums.items[0].id; //get albumId for full information
+            //end search
+
+
+
+            const albumInfoAPI = await fetch(`https://api.spotify.com/v1/albums/${albumId}`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+
+            const albumFull = await albumInfoAPI.json();
+
+
+
+        var tracklen = albumFull.tracks.items.length;
+
+        
+        function getRandomtrack(max) {
+            return Math.floor(Math.random() * max);
+        }
+
+        var tracklenght = getRandomtrack(tracklen);
+
+        let trackId = albumFull.tracks.items[`${tracklenght}`].preview_url;
+
+        var trackName = albumFull.tracks.items[`${tracklenght}`].name
+
+        document.getElementById('trackName').innerHTML = trackName
+        document.getElementById("myAudio").src = trackId;
+
+        function togglePlay() {
+
+            myAudio.play();
+        }
+
+
+    }
+    getother()
+}
 
 function mySe() {
 
@@ -409,18 +526,38 @@ function mySe() {
         document.getElementById("albpfo").innerHTML = `${palbfo1}`
         document.getElementById("albpth").innerHTML = `${palbth1}`
 
+        const clientId = '3b7adf8af5b64346a05e69bf5b4551de';
+        const clientSecret = '8ecaf8d7e30a4b549cfc603012bffe90';
+        
+        //get token
+        const rreesponse = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/x-www-form-urlencoded', 
+                'Authorization' : 'Basic ' + btoa(clientId + ':' + clientSecret)
+            },
+            body: 'grant_type=client_credentials'
+        });;
+        const dattaa = await rreesponse.json();
+        var token = dattaa.access_token;
 
-        const apiAlbum1 = `https://api.deezer.com/search/album?q=${albumName1}%20${artistName1}`;
-        const rreesponse1 = await fetch(apiAlbum1);
-        const dattaa1 = await rreesponse1.json();
-        var albumId1 = dattaa1.data[0].id
+        var artistName1 = document.getElementById('artistName').textContent
+        var albumName1 = document.getElementById('albpse').textContent
 
-        const apiTrack1 = `https://api.deezer.com/album/${albumId1}`;
-        const rreessponse1 = await fetch(apiTrack1);
-        const daattaa1 = await rreessponse1.json();
+        const AapiAlbum1 = await fetch(`https://api.spotify.com/v1/search?query=${albumName1}%20${artistName1}&type=album&market=us&limit=50&offset=0`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+        const Adattaa1 = await AapiAlbum1.json();
+        var albumId1 = Adattaa1.albums.items[0].id;
 
+            const apiTrack1 = await fetch(`https://api.spotify.com/v1/albums/${albumId1}`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+        const daattaa1 = await apiTrack1.json();
 
-        var trackdata1 = daattaa1.tracks.data
+        var trackdata1 = daattaa1.tracks.items
         var tracklen1 = trackdata1.length
 
         function getRandomtrack(max) {
@@ -428,12 +565,12 @@ function mySe() {
         }
         var tracklenght1 = getRandomtrack(tracklen1);
 
-        let trackId1 = daattaa1.tracks.data[`${tracklenght1}`].preview
+        let trackId = daattaa1.tracks.items[`${tracklenght1}`].preview_url;
 
-        var trackName = daattaa1.tracks.data[`${tracklenght1}`].title
+        var trackName = daattaa1.tracks.items[`${tracklenght1}`].name
+
         document.getElementById('trackName').innerHTML = trackName
-
-        document.getElementById("myAudio").src = `${trackId1}`
+        document.getElementById("myAudio").src = trackId;
 
     }
     getSe();
@@ -482,36 +619,51 @@ function myFi() {
         document.getElementById("albpth").innerHTML = `${palbth1}`
 
 
-        const apiAlbum1 = `https://api.deezer.com/search/album?q=${albumName1}%20${artistName1}`;
-        const rreesponse1 = await fetch(apiAlbum1);
-        const dattaa1 = await rreesponse1.json();
+        const clientId = '3b7adf8af5b64346a05e69bf5b4551de';
+        const clientSecret = '8ecaf8d7e30a4b549cfc603012bffe90';
+        
+        //get token
+        const rreesponse = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/x-www-form-urlencoded', 
+                'Authorization' : 'Basic ' + btoa(clientId + ':' + clientSecret)
+            },
+            body: 'grant_type=client_credentials'
+        });;
+        const dattaa = await rreesponse.json();
+        var token = dattaa.access_token;
 
-        var albumId1 = dattaa1.data[0].id
 
 
-        const apiTrack1 = `https://api.deezer.com/album/${albumId1}`;
-        const rreessponse1 = await fetch(apiTrack1);
-        const daattaa1 = await rreessponse1.json();
+        const apiAlbum1 = await fetch(`https://api.spotify.com/v1/search?query=${albumName1}` + '%20' + `${artistName1}&type=album&market=us&limit=50&offset=0`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+        const dattaa1 = await apiAlbum1.json();
+        var albumId1 = dattaa1.albums.items[0].id;
+
+            const apiTrack1 = await fetch(`https://api.spotify.com/v1/albums/${albumId1}`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+        const daattaa1 = await apiTrack1.json();
 
 
-
-        var trackdata1 = daattaa1.tracks.data
+        var trackdata1 = daattaa1.tracks.items
         var tracklen1 = trackdata1.length
-
 
         function getRandomtrack(max) {
             return Math.floor(Math.random() * max);
         }
         var tracklenght1 = getRandomtrack(tracklen1);
 
+        let trackId = daattaa1.tracks.items[`${tracklenght1}`].preview_url;
 
-        let trackId1 = daattaa1.tracks.data[`${tracklenght1}`].preview
+        var trackName = daattaa1.tracks.items[`${tracklenght1}`].name
 
-        var trackName = daattaa1.tracks.data[`${tracklenght1}`].title
         document.getElementById('trackName').innerHTML = trackName
-
-        document.getElementById("myAudio").src = `${trackId1}`
-
+        document.getElementById("myAudio").src = trackId;
     }
     getSe();
 }
@@ -560,34 +712,51 @@ function myFo() {
         document.getElementById("albpth").innerHTML = `${palbth1}`
 
 
-        const apiAlbum1 = `https://api.deezer.com/search/album?q=${albumName1}%20${artistName1}`;
-        const rreesponse1 = await fetch(apiAlbum1);
-        const dattaa1 = await rreesponse1.json();
+        const clientId = '3b7adf8af5b64346a05e69bf5b4551de';
+        const clientSecret = '8ecaf8d7e30a4b549cfc603012bffe90';
+        
+        //get token
+        const rreesponse = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/x-www-form-urlencoded', 
+                'Authorization' : 'Basic ' + btoa(clientId + ':' + clientSecret)
+            },
+            body: 'grant_type=client_credentials'
+        });;
+        const dattaa = await rreesponse.json();
+        var token = dattaa.access_token;
 
-        var albumId1 = dattaa1.data[0].id
-
-        const apiTrack1 = `https://api.deezer.com/album/${albumId1}`;
-        const rreessponse1 = await fetch(apiTrack1);
-        const daattaa1 = await rreessponse1.json();
 
 
+        const apiAlbum1 = await fetch(`https://api.spotify.com/v1/search?query=${albumName1}` + '%20' + `${artistName1}&type=album&market=us&limit=50&offset=0`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+        const dattaa1 = await apiAlbum1.json();
+        var albumId1 = dattaa1.albums.items[0].id;
 
-        var trackdata1 = daattaa1.tracks.data
+            const apiTrack1 = await fetch(`https://api.spotify.com/v1/albums/${albumId1}`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+        const daattaa1 = await apiTrack1.json();
+
+
+        var trackdata1 = daattaa1.tracks.items
         var tracklen1 = trackdata1.length
-
 
         function getRandomtrack(max) {
             return Math.floor(Math.random() * max);
         }
         var tracklenght1 = getRandomtrack(tracklen1);
 
+        let trackId = daattaa1.tracks.items[`${tracklenght1}`].preview_url;
 
-        let trackId1 = daattaa1.tracks.data[`${tracklenght1}`].preview
+        var trackName = daattaa1.tracks.items[`${tracklenght1}`].name
 
-        var trackName = daattaa1.tracks.data[`${tracklenght1}`].title
         document.getElementById('trackName').innerHTML = trackName
-
-        document.getElementById("myAudio").src = `${trackId1}`
+        document.getElementById("myAudio").src = trackId;
 
     }
     getSe();
@@ -638,18 +807,38 @@ function myTh() {
         document.getElementById("albpth").innerHTML = `${palbth1}`
 
 
-        const apiAlbum1 = `https://api.deezer.com/search/album?q=${albumName1}%20${artistName1}`;
-        const rreesponse1 = await fetch(apiAlbum1);
-        const dattaa1 = await rreesponse1.json();
-        var albumId1 = dattaa1.data[0].id
+        const clientId = '3b7adf8af5b64346a05e69bf5b4551de';
+        const clientSecret = '8ecaf8d7e30a4b549cfc603012bffe90';
+        
+        //get token
+        const rreesponse = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/x-www-form-urlencoded', 
+                'Authorization' : 'Basic ' + btoa(clientId + ':' + clientSecret)
+            },
+            body: 'grant_type=client_credentials'
+        });;
+        const dattaa = await rreesponse.json();
+        var token = dattaa.access_token;
 
-        const apiTrack1 = `https://api.deezer.com/album/${albumId1}`;
-        const rreessponse1 = await fetch(apiTrack1);
-        const daattaa1 = await rreessponse1.json();
 
 
+        const apiAlbum1 = await fetch(`https://api.spotify.com/v1/search?query=${albumName1}` + '%20' + `${artistName1}&type=album&market=us&limit=50&offset=0`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+        const dattaa1 = await apiAlbum1.json();
+        var albumId1 = dattaa1.albums.items[0].id;
 
-        var trackdata1 = daattaa1.tracks.data
+            const apiTrack1 = await fetch(`https://api.spotify.com/v1/albums/${albumId1}`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+        const daattaa1 = await apiTrack1.json();
+
+
+        var trackdata1 = daattaa1.tracks.items
         var tracklen1 = trackdata1.length
 
         function getRandomtrack(max) {
@@ -657,13 +846,12 @@ function myTh() {
         }
         var tracklenght1 = getRandomtrack(tracklen1);
 
-        let trackId1 = daattaa1.tracks.data[`${tracklenght1}`].preview
+        let trackId = daattaa1.tracks.items[`${tracklenght1}`].preview_url;
 
-        var trackName = daattaa1.tracks.data[`${tracklenght1}`].title
+        var trackName = daattaa1.tracks.items[`${tracklenght1}`].name
+
         document.getElementById('trackName').innerHTML = trackName
-
-        document.getElementById("myAudio").src = `${trackId1}`
-
+        document.getElementById("myAudio").src = trackId;
     }
     getSe();
 }
@@ -674,33 +862,59 @@ function rrest() {
     let albumRe = document.getElementById('albname').textContent
     let artistRe = document.getElementById('artistName').textContent
 
-
-
-    const apiTrackRe = `https://api.deezer.com/search/album?q=${albumRe}%20${artistRe}`;
     async function getother() {
-        const ress = await fetch(apiTrackRe);
-        const ddti = await ress.json();
+        const clientId = '3b7adf8af5b64346a05e69bf5b4551de';
+        const clientSecret = '8ecaf8d7e30a4b549cfc603012bffe90';
+        
+        //get token
+        const rreesponse = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/x-www-form-urlencoded', 
+                'Authorization' : 'Basic ' + btoa(clientId + ':' + clientSecret)
+            },
+            body: 'grant_type=client_credentials'
+        });;
+        const dattaa = await rreesponse.json();
+        var token = dattaa.access_token;
 
-        var albumIdRe = ddti.data[0].id
-
-        const apiTrackPlay = `https://api.deezer.com/album/${albumIdRe}`;
-        const rres = await fetch(apiTrackPlay);
-        const dtti = await rres.json();
-        var trackdataRe = dtti.tracks.data
-        var tracklenRe = trackdataRe.length
 
 
+        const searcAPI = await fetch(`https://api.spotify.com/v1/search?query=${albumRe}` + '%20' + `${artistRe}&type=album&market=us&limit=50&offset=0`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+            const sechByName = await searcAPI.json();
+
+
+            var albumId = sechByName.albums.items[0].id; //get albumId for full information
+            //end search
+
+
+            const albumInfoAPI = await fetch(`https://api.spotify.com/v1/albums/${albumId}`, {
+                method: 'GET',
+                headers: { 'Authorization' : 'Bearer ' + token}
+            });
+
+            const albumFull = await albumInfoAPI.json();
+
+
+
+        var tracklen = albumFull.tracks.items.length;
+
+        
         function getRandomtrack(max) {
             return Math.floor(Math.random() * max);
         }
-        var reTracklenght = getRandomtrack(tracklenRe);
 
-        let trackIdRe = dtti.tracks.data[`${reTracklenght}`].preview
+        var tracklenght = getRandomtrack(tracklen);
 
+        let trackId = albumFull.tracks.items[`${tracklenght}`].preview_url;
 
-        document.getElementById("myAudio").src = `${trackIdRe}`
-        var trackName = dtti.tracks.data[`${reTracklenght}`].title
+        var trackName = albumFull.tracks.items[`${tracklenght}`].name
+
         document.getElementById('trackName').innerHTML = trackName
+        document.getElementById("myAudio").src = trackId;
 
         function togglePlay() {
 
